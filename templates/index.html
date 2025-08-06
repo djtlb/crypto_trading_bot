@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEX Trading Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-robot"></i> DEX Trading Bot</h1>
+            <div id="status-indicator">
+                <span id="status-dot" class="disconnected"></span>
+                <span id="status-text">Disconnected</span>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" data-tab="wallet">Wallet</button>
+            <button class="tab-btn" data-tab="trade">Trade</button>
+            <button class="tab-btn" data-tab="strategies">Strategies</button>
+            <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-pane active">
+                <div class="card">
+                    <h2>Bot Status</h2>
+                    <div class="status-info">
+                        <p>Server: <span id="server-status">Checking...</span></p>
+                        <p>Wallet: <span id="wallet-status">Not Connected</span></p>
+                        <p>Active Strategies: <span id="active-strategies">0</span></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button id="connect-wallet-btn" class="btn primary"><i class="fas fa-wallet"></i> Connect Wallet</button>
+                        <button id="check-price-btn" class="btn secondary"><i class="fas fa-search-dollar"></i> Check Token Price</button>
+                        <button id="validate-token-btn" class="btn secondary"><i class="fas fa-shield-alt"></i> Validate Token</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="card half">
+                        <h2>Gas Prices</h2>
+                        <div id="gas-prices">
+                            <div class="gas-network" data-chain-id="1">
+                                <h3>Ethereum <span class="reload-icon" data-chain-id="1"><i class="fas fa-sync-alt"></i></span></h3>
+                                <p>Base Fee: <span id="eth-base-fee">--</span> Gwei</p>
+                                <p>Priority Fee: <span id="eth-priority-fee">--</span> Gwei</p>
+                                <p>Fast: <span id="eth-fast">--</span> Gwei</p>
+                                <p>Average: <span id="eth-average">--</span> Gwei</p>
+                                <p>Slow: <span id="eth-slow">--</span> Gwei</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card half">
+                        <h2>Active Trades</h2>
+                        <div id="active-trades-list">
+                            <p class="empty-message">No active trades</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet Tab -->
+            <div id="wallet" class="tab-pane">
+                <div class="card">
+                    <h2>Wallet Connection</h2>
+                    <div class="form-group">
+                        <label>Connection Type</label>
+                        <select id="wallet-connection-type">
+                            <option value="address">Read-only (Address)</option>
+                            <option value="private_key">Trading (Private Key)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="wallet-input-label">Wallet Address</label>
+                        <input type="text" id="wallet-input" placeholder="0x..." />
+                        <p class="warning-text" id="private-key-warning" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i> Private keys are encrypted but use at your own risk
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label>Network</label>
+                        <select id="wallet-network">
+                            <option value="1">Ethereum</option>
+                            <option value="56">BNB Smart Chain</option>
+                            <option value="137">Polygon</option>
+                            <option value="42161">Arbitrum</option>
+                        </select>
+                    </div>
+                    <button id="connect-wallet-submit" class="btn primary">Connect Wallet</button>
+                    <button id="disconnect-wallet-btn" class="btn secondary" style="display: none;">Disconnect Wallet</button>
+                </div>
+
+                <div class="card" id="wallet-info-card" style="display: none;">
+                    <h2>Wallet Information</h2>
+                    <p>Address: <span id="wallet-address">--</span></p>
+                    <p>Mode: <span id="wallet-mode">--</span></p>
+                    <div class="wallet-balances">
+                        <h3>Balances <span class="reload-icon" id="reload-balances"><i class="fas fa-sync-alt"></i></span></h3>
+                        <div id="native-balance">
+                            <p><span id="native-balance-amount">--</span> <span id="native-token-symbol">ETH</span></p>
+                        </div>
+                        <div id="token-balances">
+                            <p class="empty-message">No token balances</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade Tab -->
+            <div id="trade" class="tab-pane">
+                <div class="card">
+                    <h2>Quick Trade</h2>
+                    <div class="form-group">
+                        <label>Action</label>
+                        <div class="trade-action-buttons">
+                            <button class="btn action-btn active" id="buy-action">Buy</button>
+                            <button class="btn action-btn" id="sell-action">Sell</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Network</label>
+                        <select id="trade-network">
+                            <option value="1">Ethereum</option>
+                            <option value="56">BNB Smart Chain</option>
+                            <option value="137">Polygon</option>
+                            <option value="42161">Arbitrum</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>DEX</label>
+                        <select id="trade-dex">
+                            <option value="uniswap_v2">Uniswap V2</option>
+                            <option value="uniswap_v3">Uniswap V3</option>
+                            <option value="pancakeswap_v2">PancakeSwap V2</option>
+                            <option value="sushiswap">SushiSwap</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Token Address</label>
+                        <input type="text" id="trade-token-address" placeholder="0x..." />
+                        <button id="validate-trade-token" class="btn mini"><i class="fas fa-check-circle"></i> Validate</button>
+                    </div>
+                    <div id="buy-form">
+                        <div class="form-group">
+                            <label>Amount to Spend</label>
+                            <div class="input-with-select">
+                                <input type="number" id="buy-amount" placeholder="0.0" step="0.0001" min="0" />
+                                <select id="buy-base-token">
+                                    <option value="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE">Native Token</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sell-form" style="display: none;">
+                        <div class="form-group">
+                            <label>Amount to Sell</label>
+                            <div class="input-with-addon">
+                                <input type="number" id="sell-amount" placeholder="0.0" step="0.0001" min="0" />
+                                <span>or</span>
+                                <select id="sell-percent">
+                                    <option value="">Custom</option>
+                                    <option value="25">25%</option>
+                                    <option value="50">50%</option>
+                                    <option value="75">75%</option>
+                                    <option value="100">100%</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Receive In</label>
+                            <select id="sell-base-token">
+                                <option value="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE">Native Token</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Slippage (%)</label>
+                        <div class="slippage-buttons">
+                            <button class="btn slippage-btn" data-value="0.5">0.5%</button>
+                            <button class="btn slippage-btn active" data-value="1.0">1.0%</button>
+                            <button class="btn slippage-btn" data-value="2.0">2.0%</button>
+                            <button class="btn slippage-btn" data-value="5.0">5.0%</button>
+                            <input type="number" id="custom-slippage" placeholder="Custom" step="0.1" min="0.1" max="100" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Gas Speed</label>
+                        <div class="gas-speed-buttons">
+                            <button class="btn gas-speed-btn" data-value="slow">Slow</button>
+                            <button class="btn gas-speed-btn active" data-value="average">Average</button>
+                            <button class="btn gas-speed-btn" data-value="fast">Fast</button>
+                        </div>
+                    </div>
+                    <button id="execute-trade-btn" class="btn primary">Execute Trade</button>
+                </div>
+                <div class="card">
+                    <h2>Price Check</h2>
+                    <div class="form-group">
+                        <label>Token Address</label>
+                        <input type="text" id="price-check-token-address" placeholder="0x..." />
+                    </div>
+                    <div class="form-group">
+                        <label>Network</label>
+                        <select id="price-check-network">
+                            <option value="1">Ethereum</option>
+                            <option value="56">BNB Smart Chain</option>
+                            <option value="137">Polygon</option>
+                            <option value="42161">Arbitrum</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>DEX</label>
+                        <select id="price-check-dex">
+                            <option value="uniswap_v2">Uniswap V2</option>
+                            <option value="uniswap_v3">Uniswap V3</option>
+                            <option value="pancakeswap_v2">PancakeSwap V2</option>
+                            <option value="sushiswap">SushiSwap</option>
+                        </select>
+                    </div>
+                    <button id="check-price-submit" class="btn primary">Check Price</button>
+                    <div id="price-result" style="display: none;">
+                        <h3>Price Result</h3>
+                        <p>Token: <span id="price-token-symbol">--</span></p>
+                        <p>Price: <span id="price-value">--</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategies Tab -->
+            <div id="strategies" class="tab-pane">
+                <div class="card">
+                    <h2>Start New Strategy</h2>
+                    <div class="form-group">
+                        <label>Strategy Type</label>
+                        <select id="strategy-type">
+                            <option value="">Select Strategy...</option>
+                            <option value="sniper">Sniper</option>
+                            <option value="scalping">Scalping</option>
+                            <option value="swing">Swing</option>
+                            <option value="arbitrage">Arbitrage</option>
+                        </select>
+                    </div>
+                    <div id="strategy-description">
+                        <p>Select a strategy to see description</p>
+                    </div>
+                    <div id="strategy-form" style="display: none;">
+                        <div class="form-group">
+                            <label>Network</label>
+                            <select id="strategy-network">
+                                <option value="1">Ethereum</option>
+                                <option value="56">BNB Smart Chain</option>
+                                <option value="137">Polygon</option>
+                                <option value="42161">Arbitrum</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>DEX</label>
+                            <select id="strategy-dex">
+                                <option value="uniswap_v2">Uniswap V2</option>
+                                <option value="uniswap_v3">Uniswap V3</option>
+                                <option value="pancakeswap_v2">PancakeSwap V2</option>
+                                <option value="sushiswap">SushiSwap</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="strategy-target-dex-group" style="display: none;">
+                            <label>Target DEX (for arbitrage)</label>
+                            <select id="strategy-target-dex">
+                                <option value="uniswap_v2">Uniswap V2</option>
+                                <option value="uniswap_v3">Uniswap V3</option>
+                                <option value="pancakeswap_v2">PancakeSwap V2</option>
+                                <option value="sushiswap">SushiSwap</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Token Address</label>
+                            <input type="text" id="strategy-token-address" placeholder="0x..." />
+                        </div>
+                        <div class="form-group">
+                            <label>Base Token</label>
+                            <select id="strategy-base-token">
+                                <option value="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE">Native Token</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="strategy-amount" placeholder="0.0" step="0.0001" min="0" />
+                        </div>
+                        <div class="form-group">
+                            <label>Slippage (%)</label>
+                            <input type="number" id="strategy-slippage" placeholder="1.0" value="1.0" step="0.1" min="0.1" max="100" />
+                        </div>
+                        <div class="form-group">
+                            <label>Profit Target (%)</label>
+                            <input type="number" id="strategy-profit-target" placeholder="5.0" value="5.0" step="0.1" min="0.1" />
+                        </div>
+                        <div class="form-group">
+                            <label>Stop Loss (%)</label>
+                            <input type="number" id="strategy-stop-loss" placeholder="2.0" value="2.0" step="0.1" min="0.1" />
+                        </div>
+                        <div class="form-group">
+                            <label>Trailing Stop</label>
+                            <select id="strategy-trailing-stop">
+                                <option value="false">Disabled</option>
+                                <option value="true">Enabled</option>
+                            </select>
+                        </div>
+                        <div id="strategy-specific-params"></div>
+                    </div>
+                    <button id="start-strategy-btn" class="btn primary" disabled>Start Strategy</button>
+                </div>
+
+                <div class="card">
+                    <h2>Active Strategies <span class="reload-icon" id="reload-strategies"><i class="fas fa-sync-alt"></i></span></h2>
+                    <div id="active-strategies-list">
+                        <p class="empty-message">No active strategies</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-pane">
+                <div class="card">
+                    <h2>Application Settings</h2>
+                    <div class="form-group">
+                        <label>Default Network</label>
+                        <select id="default-network">
+                            <option value="1">Ethereum</option>
+                            <option value="56">BNB Smart Chain</option>
+                            <option value="137">Polygon</option>
+                            <option value="42161">Arbitrum</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Default DEX</label>
+                        <select id="default-dex">
+                            <option value="uniswap_v2">Uniswap V2</option>
+                            <option value="uniswap_v3">Uniswap V3</option>
+                            <option value="pancakeswap_v2">PancakeSwap V2</option>
+                            <option value="sushiswap">SushiSwap</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Default Slippage (%)</label>
+                        <input type="number" id="default-slippage" placeholder="1.0" value="1.0" step="0.1" min="0.1" max="100" />
+                    </div>
+                    <div class="form-group">
+                        <label>Default Gas Speed</label>
+                        <select id="default-gas-speed">
+                            <option value="slow">Slow</option>
+                            <option value="average" selected>Average</option>
+                            <option value="fast">Fast</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Theme</label>
+                        <select id="theme-selector">
+                            <option value="light">Light</option>
+                            <option value="dark" selected>Dark</option>
+                        </select>
+                    </div>
+                    <button id="save-settings-btn" class="btn primary">Save Settings</button>
+                </div>
+
+                <div class="card">
+                    <h2>API Information</h2>
+                    <p>API Base URL: <span id="api-url">http://localhost:5002</span></p>
+                    <div class="form-group">
+                        <label>Custom API URL</label>
+                        <input type="text" id="custom-api-url" placeholder="http://localhost:5002" />
+                    </div>
+                    <button id="update-api-url-btn" class="btn secondary">Update API URL</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 DEX Trading Bot | <a href="https://github.com/your-username/crypto_trading_bot" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Modal Title</h2>
+            <div id="modal-body">
+                Modal content goes here...
+            </div>
+            <div id="modal-footer">
+                <button id="modal-cancel" class="btn secondary">Cancel</button>
+                <button id="modal-confirm" class="btn primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

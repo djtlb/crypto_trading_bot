@@ -1,0 +1,47 @@
+{
+  "trading": {
+    "total_budget": 50,
+    "max_concurrent_trades": 10,
+    "min_trade_amount": 3,
+    "max_trade_amount": 8,
+    "position_sizing_method": "fixed",
+    "risk_per_trade": 0.02
+  },
+  "risk_management": {
+    "stop_loss_percentage": 3,
+    "take_profit_percentage": 8,
+    "max_drawdown_percentage": 15,
+    "daily_loss_limit": 10
+  },
+  "strategy_parameters": {
+    "volatility_breakout": {
+      "lookback_period": 14,
+      "volatility_threshold": 2.0,
+      "timeframe": "15m"
+    },
+    "moving_average_cross": {
+      "fast_ma_period": 9,
+      "slow_ma_period": 21,
+      "ma_type": "ema",
+      "timeframe": "15m"
+    },
+    "rsi_strategy": {
+      "rsi_period": 14,
+      "oversold_threshold": 25,
+      "overbought_threshold": 75,
+      "timeframe": "15m"
+    }
+  },
+  "exchanges": {
+    "binance": {
+      "sandbox": true,
+      "testnet": true
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/trading_bot.log",
+    "max_file_size": "10MB",
+    "backup_count": 5
+  }
+}

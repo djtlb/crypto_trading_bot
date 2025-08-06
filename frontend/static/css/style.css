@@ -1,0 +1,388 @@
+/* Custom CSS for GPU Trading Bot */
+
+:root {
+    --primary-color: #007bff;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --dark-color: #343a40;
+    --light-color: #f8f9fa;
+}
+
+body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Status Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-warning,
+.card.bg-info,
+.card.bg-danger {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3) !important;
+}
+
+.card.bg-success {
+    background: linear-gradient(135deg, var(--success-color), #1e7e34) !important;
+}
+
+.card.bg-warning {
+    background: linear-gradient(135deg, var(--warning-color), #d39e00) !important;
+}
+
+.card.bg-info {
+    background: linear-gradient(135deg, var(--info-color), #117a8b) !important;
+}
+
+.card.bg-danger {
+    background: linear-gradient(135deg, var(--danger-color), #bd2130) !important;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* Forms */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Status Badges */
+.badge {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Connection Status */
+#connection-status {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Strategy Cards */
+.strategy-card {
+    border-left: 4px solid var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.strategy-card.rsi {
+    border-left-color: var(--info-color);
+}
+
+.strategy-card.volatility {
+    border-left-color: var(--warning-color);
+}
+
+.strategy-card.moving-average {
+    border-left-color: var(--success-color);
+}
+
+/* GPU Status */
+.gpu-status-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.gpu-status-item.enabled {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid var(--success-color);
+}
+
+.gpu-status-item.disabled {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid var(--danger-color);
+}
+
+/* Market Data Cards */
+.market-card {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.market-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.price-positive {
+    color: var(--success-color);
+}
+
+.price-negative {
+    color: var(--danger-color);
+}
+
+/* Trade History Table */
+.trade-history-table {
+    font-size: 0.9rem;
+}
+
+.trade-history-table th {
+    background-color: var(--light-color);
+    border-top: none;
+    font-weight: 600;
+}
+
+.trade-buy {
+    border-left: 3px solid var(--success-color);
+}
+
+.trade-sell {
+    border-left: 3px solid var(--danger-color);
+}
+
+/* Logs */
+#logs-content {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.log-entry {
+    margin-bottom: 0.25rem;
+    padding: 0.25rem 0;
+}
+
+.log-info {
+    color: #63b3ed;
+}
+
+.log-warning {
+    color: #f6e05e;
+}
+
+.log-error {
+    color: #fc8181;
+}
+
+.log-success {
+    color: #68d391;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Spinner customizations */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Alert customizations */
+.alert {
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.75rem 1rem;
+}
+
+/* Tab customizations */
+.nav-tabs .nav-link {
+    border: none;
+    border-radius: 8px 8px 0 0;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: var(--primary-color);
+}
+
+/* Progress bars */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+}
+
+/* Portfolio allocation chart */
+.allocation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.allocation-item:last-child {
+    border-bottom: none;
+}
+
+.allocation-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    #alert-container {
+        left: 20px;
+        right: 20px;
+    }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+    
+    .card {
+        background-color: #2d3748;
+        color: #ffffff;
+    }
+    
+    .form-control,
+    .form-select {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #ffffff;
+    }
+}
+
+/* Loading states */
+.loading {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Success states */
+.success-state {
+    border-left: 4px solid var(--success-color);
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.error-state {
+    border-left: 4px solid var(--danger-color);
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+/* Performance metrics */
+.metric-positive {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.metric-negative {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.metric-neutral {
+    color: #6c757d;
+    font-weight: 500;
+}
