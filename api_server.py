@@ -5,10 +5,11 @@ Trading Bot Web API Backend
 FastAPI backend for the crypto trading bot with Coinbase Pro integration
 """
 
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from typing import List, Dict, Optional
 import os
@@ -17,6 +18,8 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 import uvicorn
+import secrets
+import time
 
 # Import our trading bot components
 from utils.exchange_handler import ExchangeHandler
@@ -26,6 +29,7 @@ from utils.multi_strategy_trader import MultiStrategyTrader
 from utils.gpu_acceleration import gpu_accelerator
 from utils.demo_data import demo_service
 from utils.websocket_manager import ConnectionManager
+from utils.rate_limiter import RateLimiter
 
 # Initialize WebSocket manager
 manager = ConnectionManager()
@@ -41,14 +45,40 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for frontend
+# Enable CORS for frontend with improved security
+# Use environment variable to control allowed origins
+allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000").split(",")
+logger.info(f"Configuring CORS with allowed origins: {allowed_origins}")
+
+# Add CORS middleware with proper security settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "X-API-Key"],
+    expose_headers=["Content-Disposition"],
+    max_age=600  # Cache preflight requests for 10 minutes
 )
+
+# Add rate limiting for production (adjust parameters as needed)
+# Disable in development by setting ENABLE_RATE_LIMIT=0
+if os.environ.get("ENABLE_RATE_LIMIT", "1") == "1":
+    # Configure rate limits
+    max_requests = int(os.environ.get("RATE_LIMIT_MAX_REQUESTS", "100"))
+    window_seconds = int(os.environ.get("RATE_LIMIT_WINDOW_SECONDS", "60"))
+    block_time = int(os.environ.get("RATE_LIMIT_BLOCK_TIME", "300"))
+    
+    # Add rate limiter middleware
+    app.add_middleware(
+        RateLimiter,
+        max_requests=max_requests,
+        window_seconds=window_seconds,
+        block_time_seconds=block_time
+    )
+    logger.info(f"Rate limiting enabled: {max_requests} requests per {window_seconds}s")
+else:
+    logger.info("Rate limiting disabled (development mode)")
 
 # Global trading bot instance
 trading_bot = None
@@ -109,8 +139,11 @@ async def login(request: LoginRequest):
             "demo_mode": True,
             "gpu_status": {
                 "gpu_available": gpu_accelerator.gpu_available,
-                "numba_available": gpu_accelerator.use_numba,
-                "polars_available": gpu_accelerator.use_polars
+                "use_opencl": gpu_accelerator.use_opencl,
+                "use_rocm": gpu_accelerator.use_rocm,
+                "use_numba": gpu_accelerator.use_numba,
+                "use_polars": gpu_accelerator.use_polars,
+                "acceleration_type": "AMD-optimized" if gpu_accelerator.gpu_available else "CPU-only"
             }
         }
     
@@ -172,8 +205,11 @@ async def login(request: LoginRequest):
             "demo_mode": False,
             "gpu_status": {
                 "gpu_available": gpu_accelerator.gpu_available,
-                "numba_available": gpu_accelerator.use_numba,
-                "polars_available": gpu_accelerator.use_polars
+                "use_opencl": gpu_accelerator.use_opencl,
+                "use_rocm": gpu_accelerator.use_rocm,
+                "use_numba": gpu_accelerator.use_numba,
+                "use_polars": gpu_accelerator.use_polars,
+                "acceleration_type": "AMD-optimized" if gpu_accelerator.gpu_available else "CPU-only"
             }
         }
         
@@ -614,8 +650,28 @@ async def test_connection():
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time updates"""
+    # Get query parameters for basic auth
+    token = websocket.query_params.get("token")
+    session_id = websocket.query_params.get("session_id")
+    
+    # Validate connection - in production, use a proper token validation system
+    # For now, accept all connections in demo mode or with any token
+    is_valid = demo_mode or token is not None
+    
+    if not is_valid:
+        await websocket.close(code=1008, reason="Unauthorized")
+        return
+    
+    # Accept the connection
     await manager.connect(websocket)
+    client_id = session_id or str(id(websocket))
+    logger.info(f"WebSocket client connected: {client_id}")
+    
     try:
+        # Send initial status upon connection
+        await send_immediate_update(websocket)
+        
+        # Process messages
         while True:
             # Keep connection alive and listen for client messages
             data = await websocket.receive_text()
@@ -633,6 +689,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 await websocket.send_text(json.dumps({'type': 'error', 'message': 'Invalid JSON'}))
                 
     except WebSocketDisconnect:
+        logger.info(f"WebSocket client disconnected: {client_id}")
         manager.disconnect(websocket)
     except Exception as e:
         logger.error(f"WebSocket error: {e}")
@@ -668,8 +725,11 @@ async def send_immediate_update(websocket: WebSocket):
                         },
                         'gpu_status': {
                             "gpu_available": gpu_accelerator.gpu_available,
+                            "use_opencl": gpu_accelerator.use_opencl,
+                            "use_rocm": gpu_accelerator.use_rocm,
                             "use_numba": gpu_accelerator.use_numba,
-                            "use_polars": gpu_accelerator.use_polars
+                            "use_polars": gpu_accelerator.use_polars,
+                            "acceleration_type": "AMD-optimized" if gpu_accelerator.gpu_available else "CPU-only"
                         },
                         'bot_status': bot_status
                     },

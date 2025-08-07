@@ -9,6 +9,7 @@ from web3 import Web3
 import json
 import os
 import logging
+import requests
 from typing import Dict, Any, List, Optional, Tuple, Union
 
 logger = logging.getLogger("DexConnector")

@@ -14,6 +14,7 @@ from dex_strategies.sniper_strategy import SniperStrategy
 from dex_strategies.scalping_strategy import ScalpingStrategy
 from dex_strategies.swing_strategy import SwingStrategy
 from dex_strategies.arbitrage_strategy import ArbitrageStrategy
+from dex_strategies.high_frequency_momentum import HighFrequencyMomentumStrategy
 from dex_utils.wallet_manager import WalletManager
 from dex_utils.token_validator import TokenValidator
 
@@ -26,7 +27,8 @@ class StrategyFactory:
         "sniper": SniperStrategy,
         "scalping": ScalpingStrategy,
         "swing": SwingStrategy,
-        "arbitrage": ArbitrageStrategy
+        "arbitrage": ArbitrageStrategy,
+        "high_frequency_momentum": HighFrequencyMomentumStrategy
     }
     
     def __init__(self, web3: Web3, chain_id: int, wallet_manager: WalletManager):

@@ -3,328 +3,927 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPU-Accelerated Crypto Trading Bot</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>CryptoEdge Pro | Advanced GPU Trading</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="d-flex flex-column h-100">
         <!-- Navigation Bar -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-glass">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <i class="fas fa-robot"></i> GPU Trading Bot
-                </a>
-                <div class="navbar-nav ms-auto">
-                    <div class="nav-item">
-                        <span id="connection-status" class="badge bg-danger me-2">Disconnected</span>
-                        <span id="bot-status" class="badge bg-secondary me-2">Stopped</span>
-                        <span id="gpu-status" class="badge bg-warning">GPU Status</span>
+                    <div class="d-flex align-items-center">
+                        <div class="brand-icon-container me-2">
+                            <i class="fas fa-robot brand-icon"></i>
+                        </div>
+                        <span class="brand-text">CryptoEdge<span class="text-primary">Pro</span></span>
                     </div>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item me-3">
+                            <div class="status-indicator">
+                                <span id="connection-status" class="status-badge status-danger">
+                                    <i class="fas fa-wifi me-1"></i> Disconnected
+                                </span>
+                            </div>
+                        </li>
+                        <li class="nav-item me-3">
+                            <div class="status-indicator">
+                                <span id="bot-status" class="status-badge status-secondary">
+                                    <i class="fas fa-power-off me-1"></i> Stopped
+                                </span>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="status-indicator">
+                                <span id="gpu-status" class="status-badge status-warning">
+                                    <i class="fas fa-microchip me-1"></i> GPU Status
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
 
         <!-- Main Content -->
-        <div class="container-fluid mt-4">
+        <div class="container-fluid py-4 flex-grow-1">
             <!-- Login Section -->
-            <div id="login-section" class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <h5><i class="fab fa-bitcoin"></i> Connect to Coinbase Pro</h5>
+            <div id="login-section" class="row justify-content-center align-items-center h-100">
+                <div class="col-xxl-4 col-lg-5 col-md-7">
+                    <div class="card glass-card">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle primary-gradient me-3">
+                                    <i class="fab fa-bitcoin text-white"></i>
+                                </div>
+                                <h5 class="mb-0">Connect to Exchange</h5>
+                            </div>
+                            <span class="badge bg-primary-soft text-primary">Secure Connection</span>
                         </div>
-                        <div class="card-body">
-                            <form id="login-form">
-                                <div class="mb-3">
-                                    <label for="api-key" class="form-label">API Key</label>
-                                    <input type="password" class="form-control" id="api-key" required>
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                                <div class="login-logo">
+                                    <i class="fas fa-robot"></i>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="api-secret" class="form-label">API Secret</label>
-                                    <input type="password" class="form-control" id="api-secret" required>
+                                <h4 class="mt-3 mb-1">CryptoEdge Pro</h4>
+                                <p class="text-muted">Advanced GPU-Accelerated Trading Platform</p>
+                            </div>
+                            
+                            <form id="login-form" class="needs-validation" novalidate>
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="api-key" placeholder="API Key" required>
+                                    <label for="api-key"><i class="fas fa-key me-2"></i>API Key</label>
+                                    <div class="invalid-feedback">Please provide your API key</div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="api-passphrase" class="form-label">API Passphrase</label>
-                                    <input type="password" class="form-control" id="api-passphrase" required>
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="api-secret" placeholder="API Secret" required>
+                                    <label for="api-secret"><i class="fas fa-lock me-2"></i>API Secret</label>
+                                    <div class="invalid-feedback">Please provide your API secret</div>
                                 </div>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="sandbox" checked>
-                                    <label class="form-check-label" for="sandbox">
-                                        Use Sandbox (Recommended for testing)
-                                    </label>
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="api-passphrase" placeholder="API Passphrase" required>
+                                    <label for="api-passphrase"><i class="fas fa-shield-alt me-2"></i>API Passphrase</label>
+                                    <div class="invalid-feedback">Please provide your API passphrase</div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-plug"></i> Connect
-                                </button>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="sandbox" checked>
+                                        <label class="form-check-label" for="sandbox">
+                                            Sandbox Mode
+                                        </label>
+                                    </div>
+                                    <span class="badge bg-warning-soft text-warning">
+                                        <i class="fas fa-info-circle me-1"></i> Recommended for testing
+                                    </span>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg pulse-button">
+                                        <i class="fas fa-plug me-2"></i> Connect Exchange
+                                    </button>
+                                    
+                                    <button type="button" id="demo-login" class="btn btn-outline-secondary">
+                                        <i class="fas fa-vial me-2"></i> Enter Demo Mode
+                                    </button>
+                                </div>
                             </form>
-                            <div id="login-error" class="alert alert-danger mt-3" style="display: none;"></div>
+                            
+                            <div id="login-error" class="alert alert-danger alert-dismissible fade show mt-3" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <span id="login-error-message"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="fas fa-bolt text-warning mb-2"></i>
+                                        <span class="small text-muted">GPU Powered</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="fas fa-shield-alt text-primary mb-2"></i>
+                                        <span class="small text-muted">Secure API</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="fas fa-chart-line text-success mb-2"></i>
+                                        <span class="small text-muted">Advanced AI</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Dashboard Section -->
-            <div id="dashboard-section" style="display: none;">
-                <!-- Control Panel -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header bg-success text-white">
-                                <h5><i class="fas fa-tachometer-alt"></i> Trading Control Panel</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button id="start-trading" class="btn btn-success btn-lg">
-                                            <i class="fas fa-play"></i> Start Trading
-                                        </button>
-                                        <button id="stop-trading" class="btn btn-danger btn-lg" style="display: none;">
-                                            <i class="fas fa-stop"></i> Stop Trading
-                                        </button>
-                                    </div>
-                                    <div class="col-md-6 text-end">
-                                        <button id="benchmark-btn" class="btn btn-info">
-                                            <i class="fas fa-chart-line"></i> GPU Benchmark
-                                        </button>
-                                        <button id="refresh-data" class="btn btn-secondary">
-                                            <i class="fas fa-sync-alt"></i> Refresh
-                                        </button>
-                                    </div>
+            <div id="dashboard-section" class="h-100" style="display: none;">
+                <div class="row g-3 mb-4">
+                    <!-- Sidebar -->
+                    <div class="col-xl-2 col-lg-3 d-none d-lg-block">
+                        <div class="card glass-card sidebar">
+                            <div class="nav-user-profile text-center my-4">
+                                <div class="profile-avatar">
+                                    <i class="fas fa-user-circle"></i>
                                 </div>
+                                <h6 class="mt-3 mb-1">Trading Account</h6>
+                                <p class="text-muted fs-sm">Demo Account <span class="badge bg-primary-soft text-primary ms-1">Pro</span></p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status Cards Row -->
-                <div class="row mb-4">
-                    <!-- Portfolio Status -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-primary text-white">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6>Total Budget</h6>
-                                        <h4 id="total-budget">$0.00</h4>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="fas fa-wallet fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Available Budget -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-success text-white">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6>Available</h6>
-                                        <h4 id="available-budget">$0.00</h4>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="fas fa-dollar-sign fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Active Trades -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-warning text-dark">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6>Active Trades</h6>
-                                        <h4 id="active-trades">0/10</h4>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="fas fa-chart-line fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Daily P&L -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-info text-white">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6>Daily P&L</h6>
-                                        <h4 id="daily-pnl">$0.00</h4>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="fas fa-chart-bar fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GPU Status -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header bg-info text-white">
-                                <h5><i class="fas fa-microchip"></i> GPU Acceleration Status</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row" id="gpu-status-content">
-                                    <!-- GPU status will be populated here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Main Content Tabs -->
-                <div class="row">
-                    <div class="col-12">
-                        <ul class="nav nav-tabs" id="main-tabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="strategies-tab" data-bs-toggle="tab" data-bs-target="#strategies" type="button" role="tab">
+                            
+                            <div class="nav flex-column nav-pills sidebar-nav" id="dashboard-tabs" role="tablist">
+                                <a class="nav-link active" id="overview-pill" data-bs-toggle="pill" href="#overview" role="tab">
+                                    <i class="fas fa-th-large"></i> Overview
+                                </a>
+                                <a class="nav-link" id="strategies-pill" data-bs-toggle="pill" href="#strategies" role="tab">
                                     <i class="fas fa-cogs"></i> Strategies
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="portfolio-tab" data-bs-toggle="tab" data-bs-target="#portfolio" type="button" role="tab">
+                                </a>
+                                <a class="nav-link" id="portfolio-pill" data-bs-toggle="pill" href="#portfolio" role="tab">
                                     <i class="fas fa-briefcase"></i> Portfolio
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="trading-tab" data-bs-toggle="tab" data-bs-target="#trading" type="button" role="tab">
-                                    <i class="fas fa-exchange-alt"></i> Manual Trading
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="market-tab" data-bs-toggle="tab" data-bs-target="#market" type="button" role="tab">
+                                </a>
+                                <a class="nav-link" id="trading-pill" data-bs-toggle="pill" href="#trading" role="tab">
+                                    <i class="fas fa-exchange-alt"></i> Trading
+                                </a>
+                                <a class="nav-link" id="market-pill" data-bs-toggle="pill" href="#market" role="tab">
                                     <i class="fas fa-chart-area"></i> Market Data
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab">
+                                </a>
+                                <a class="nav-link" id="logs-pill" data-bs-toggle="pill" href="#logs" role="tab">
                                     <i class="fas fa-file-alt"></i> Logs
-                                </button>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="main-tab-content">
-                            <!-- Strategies Tab -->
-                            <div class="tab-pane fade show active" id="strategies" role="tabpanel">
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h6>GPU-Accelerated Trading Strategies</h6>
+                                </a>
+                            </div>
+                            
+                            <div class="mt-auto p-3">
+                                <div class="card bg-primary-gradient text-white">
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title">Need Help?</h6>
+                                        <p class="card-text fs-sm">Check out our documentation for tips and best practices.</p>
+                                        <a href="#" class="btn btn-sm btn-light">View Docs</a>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Content Area -->
+                    <div class="col-xl-10 col-lg-9">
+                        <!-- Mobile Navigation -->
+                        <div class="d-lg-none mb-3">
+                            <div class="card glass-card">
+                                <div class="card-body p-2">
+                                    <select class="form-select" id="mobile-navigation">
+                                        <option value="overview">Overview</option>
+                                        <option value="strategies">Strategies</option>
+                                        <option value="portfolio">Portfolio</option>
+                                        <option value="trading">Trading</option>
+                                        <option value="market">Market Data</option>
+                                        <option value="logs">Logs</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Control Panel -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <div class="card glass-card">
+                                    <div class="card-body d-flex justify-content-between align-items-center p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-circle success-gradient me-3">
+                                                <i class="fas fa-tachometer-alt text-white"></i>
+                                            </div>
+                                            <h5 class="mb-0">Trading Control Panel</h5>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <button id="start-trading" class="btn btn-success btn-pulse me-2">
+                                                <i class="fas fa-play me-2"></i> Start Bot
+                                            </button>
+                                            <button id="stop-trading" class="btn btn-danger me-2" style="display: none;">
+                                                <i class="fas fa-stop me-2"></i> Stop Bot
+                                            </button>
+                                            <button id="benchmark-btn" class="btn btn-primary me-2">
+                                                <i class="fas fa-chart-line me-2"></i> GPU Benchmark
+                                            </button>
+                                            <button id="refresh-data" class="btn btn-light btn-icon">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Cards Row -->
+                        <div class="row g-3 mb-4">
+                            <!-- Portfolio Value -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card glass-card status-card primary-border">
                                     <div class="card-body">
-                                        <div id="strategies-content">
-                                            <!-- Strategy cards will be populated here -->
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="text-muted mb-0">Total Budget</h6>
+                                            <div class="icon-circle primary-gradient">
+                                                <i class="fas fa-wallet text-white"></i>
+                                            </div>
+                                        </div>
+                                        <h3 id="total-budget" class="mb-1">$0.00</h3>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-primary-soft text-primary">Portfolio Value</span>
+                                            <span class="ms-auto text-success fs-sm">
+                                                <i class="fas fa-arrow-up me-1"></i> 0.00%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Available Budget -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card glass-card status-card success-border">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="text-muted mb-0">Available Budget</h6>
+                                            <div class="icon-circle success-gradient">
+                                                <i class="fas fa-dollar-sign text-white"></i>
+                                            </div>
+                                        </div>
+                                        <h3 id="available-budget" class="mb-1">$0.00</h3>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success-soft text-success">Available</span>
+                                            <span class="ms-auto text-muted fs-sm" id="available-percent">0% of total</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Active Trades -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card glass-card status-card warning-border">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="text-muted mb-0">Active Trades</h6>
+                                            <div class="icon-circle warning-gradient">
+                                                <i class="fas fa-chart-line text-white"></i>
+                                            </div>
+                                        </div>
+                                        <h3 id="active-trades" class="mb-1">0/10</h3>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-warning-soft text-warning">Active Positions</span>
+                                            <div class="progress flex-grow-1 ms-3" style="height: 5px;">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Daily P&L -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card glass-card status-card info-border">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="text-muted mb-0">Daily P&L</h6>
+                                            <div class="icon-circle info-gradient">
+                                                <i class="fas fa-chart-bar text-white"></i>
+                                            </div>
+                                        </div>
+                                        <h3 id="daily-pnl" class="mb-1">$0.00</h3>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-info-soft text-info">24h Change</span>
+                                            <span class="ms-auto fs-sm">
+                                                <span id="pnl-percent" class="text-success">+0.00%</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Overview Tab -->
+                            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                                <!-- GPU Status -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-microchip me-2 text-primary"></i> GPU Acceleration Status
+                                                    </h5>
+                                                    <span class="badge bg-success-soft text-success">
+                                                        <i class="fas fa-bolt me-1"></i> Performance Boost Active
+                                                    </span>
+                                                </div>
+                                                
+                                                <div class="row" id="gpu-status-content">
+                                                    <!-- GPU status will be populated here -->
+                                                </div>
+                                                
+                                                <div class="mt-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="text-muted fs-sm">Overall GPU Utilization</span>
+                                                        <div class="progress flex-grow-1 ms-3" style="height: 8px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"></div>
+                                                        </div>
+                                                        <span class="ms-2 fw-bold">75%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Performance Charts -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-lg-6">
+                                        <div class="card glass-card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-chart-line me-2 text-success"></i> Performance Metrics
+                                                </h5>
+                                                <div id="performance-chart" class="chart-container"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card glass-card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-poll me-2 text-warning"></i> Strategy Performance
+                                                </h5>
+                                                <div id="strategy-performance-chart" class="chart-container"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Recent Activities -->
+                                <div class="row g-3">
+                                    <div class="col-lg-6">
+                                        <div class="card glass-card h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-history me-2 text-info"></i> Recent Activities
+                                                    </h5>
+                                                    <a href="#" class="btn btn-sm btn-link">View All</a>
+                                                </div>
+                                                <div class="activity-timeline" id="recent-activities">
+                                                    <!-- Activity items will be populated here -->
+                                                    <div class="activity-item">
+                                                        <div class="activity-dot bg-success"></div>
+                                                        <div class="activity-content">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6 class="mb-1">Bot Started</h6>
+                                                                <small class="text-muted">Just now</small>
+                                                            </div>
+                                                            <p class="mb-0 text-muted fs-sm">Trading bot started successfully with 3 active strategies</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="activity-item">
+                                                        <div class="activity-dot bg-primary"></div>
+                                                        <div class="activity-content">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6 class="mb-1">Connected to Exchange</h6>
+                                                                <small class="text-muted">5m ago</small>
+                                                            </div>
+                                                            <p class="mb-0 text-muted fs-sm">Successfully established connection to exchange API</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="activity-item">
+                                                        <div class="activity-dot bg-warning"></div>
+                                                        <div class="activity-content">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6 class="mb-1">Trade Executed</h6>
+                                                                <small class="text-muted">15m ago</small>
+                                                            </div>
+                                                            <p class="mb-0 text-muted fs-sm">BTC/USDT - Bought 0.001 BTC at $36,782.14</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <div class="card glass-card h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-coins me-2 text-warning"></i> Top Performing Assets
+                                                    </h5>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button" class="btn btn-outline-secondary active">24h</button>
+                                                        <button type="button" class="btn btn-outline-secondary">7d</button>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-borderless align-middle">
+                                                        <thead class="text-muted fs-sm">
+                                                            <tr>
+                                                                <th>Asset</th>
+                                                                <th>Price</th>
+                                                                <th>Change</th>
+                                                                <th>Volume</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="top-assets">
+                                                            <!-- Will be populated dynamically -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="coin-icon btc me-2"></div>
+                                                                        <div>
+                                                                            <h6 class="mb-0">Bitcoin</h6>
+                                                                            <small class="text-muted">BTC</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>$36,782.14</td>
+                                                                <td><span class="text-success">+2.4%</span></td>
+                                                                <td>$24.5B</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="coin-icon eth me-2"></div>
+                                                                        <div>
+                                                                            <h6 class="mb-0">Ethereum</h6>
+                                                                            <small class="text-muted">ETH</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>$2,415.30</td>
+                                                                <td><span class="text-success">+3.8%</span></td>
+                                                                <td>$12.1B</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="coin-icon sol me-2"></div>
+                                                                        <div>
+                                                                            <h6 class="mb-0">Solana</h6>
+                                                                            <small class="text-muted">SOL</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>$104.52</td>
+                                                                <td><span class="text-success">+5.2%</span></td>
+                                                                <td>$3.4B</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Strategies Tab -->
+                            <div class="tab-pane fade" id="strategies" role="tabpanel">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-cogs me-2 text-primary"></i> GPU-Accelerated Strategies
+                                                    </h5>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary active">All</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary">Active</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary">Paused</button>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div id="strategies-content" class="row g-3">
+                                                    <!-- Strategy cards will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Strategy Performance Metrics -->
+                                <div class="row g-3">
+                                    <div class="col-lg-7">
+                                        <div class="card glass-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-chart-bar me-2 text-info"></i> Strategy Performance Comparison
+                                                </h5>
+                                                <div id="strategy-comparison-chart" class="chart-container"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-5">
+                                        <div class="card glass-card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-bolt me-2 text-warning"></i> GPU Acceleration Gains
+                                                </h5>
+                                                <div id="gpu-gains-chart" class="chart-container"></div>
+                                                <div class="mt-3 text-center">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h6 class="text-success mb-1">38.2x</h6>
+                                                            <p class="text-muted fs-sm mb-0">RSI Calculation</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <h6 class="text-success mb-1">16.5x</h6>
+                                                            <p class="text-muted fs-sm mb-0">Volatility Analysis</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <!-- Portfolio Tab -->
                             <div class="tab-pane fade" id="portfolio" role="tabpanel">
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h6>Portfolio Details</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-lg-8">
+                                        <div class="card glass-card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-chart-pie me-2 text-primary"></i> Portfolio Allocation
+                                                    </h5>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button" class="btn btn-outline-secondary active">Value</button>
+                                                        <button type="button" class="btn btn-outline-secondary">Percentage</button>
+                                                    </div>
+                                                </div>
+                                                <div id="portfolio-chart" class="chart-container"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div id="portfolio-content">
-                                            <!-- Portfolio details will be populated here -->
+                                    
+                                    <div class="col-lg-4">
+                                        <div class="card glass-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-balance-scale me-2 text-success"></i> Portfolio Summary
+                                                </h5>
+                                                <div id="portfolio-content">
+                                                    <!-- Portfolio details will be populated here -->
+                                                </div>
+                                                <div class="mt-3">
+                                                    <button class="btn btn-sm btn-primary w-100">
+                                                        <i class="fas fa-download me-2"></i> Export Portfolio Data
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Portfolio Performance -->
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-chart-line me-2 text-info"></i> Portfolio Performance
+                                                    </h5>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button" class="btn btn-outline-secondary active">24h</button>
+                                                        <button type="button" class="btn btn-outline-secondary">7d</button>
+                                                        <button type="button" class="btn btn-outline-secondary">30d</button>
+                                                        <button type="button" class="btn btn-outline-secondary">All</button>
+                                                    </div>
+                                                </div>
+                                                <div id="portfolio-performance-chart" class="chart-container"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Manual Trading Tab -->
                             <div class="tab-pane fade" id="trading" role="tabpanel">
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h6>Manual Trade Execution</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-lg-5">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-exchange-alt me-2 text-primary"></i> Manual Trade Execution
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <form id="manual-trade-form" class="needs-validation" novalidate>
+                                                    <div class="mb-3">
+                                                        <label for="trade-symbol" class="form-label">Trading Pair</label>
+                                                        <select class="form-select form-select-lg" id="trade-symbol" required>
+                                                            <option value="BTC/USDT">BTC/USDT</option>
+                                                            <option value="ETH/USDT">ETH/USDT</option>
+                                                            <option value="BNB/USDT">BNB/USDT</option>
+                                                            <option value="ADA/USDT">ADA/USDT</option>
+                                                            <option value="SOL/USDT">SOL/USDT</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-6">
+                                                            <label for="trade-side" class="form-label">Side</label>
+                                                            <div class="d-flex">
+                                                                <div class="form-check form-check-inline flex-grow-1">
+                                                                    <input class="form-check-input" type="radio" name="trade-side" id="side-buy" value="buy" checked>
+                                                                    <label class="form-check-label btn btn-outline-success w-100" for="side-buy">
+                                                                        <i class="fas fa-arrow-up me-1"></i> Buy
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline flex-grow-1">
+                                                                    <input class="form-check-input" type="radio" name="trade-side" id="side-sell" value="sell">
+                                                                    <label class="form-check-label btn btn-outline-danger w-100" for="side-sell">
+                                                                        <i class="fas fa-arrow-down me-1"></i> Sell
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="trade-amount" class="form-label">Amount ($)</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">$</span>
+                                                                <input type="number" class="form-control" id="trade-amount" min="1" max="50" step="0.01" value="10" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label for="trade-strategy" class="form-label">Strategy</label>
+                                                        <select class="form-select" id="trade-strategy" required>
+                                                            <option value="manual">Manual Decision</option>
+                                                            <option value="gpu_rsi_strategy">GPU RSI Strategy</option>
+                                                            <option value="gpu_volatility_breakout">GPU Volatility Breakout</option>
+                                                            <option value="gpu_moving_average_cross">GPU MA Cross</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="d-grid">
+                                                        <button type="submit" class="btn btn-primary btn-lg">
+                                                            <i class="fas fa-bolt me-2"></i> Execute Trade
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <form id="manual-trade-form">
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <label for="trade-symbol" class="form-label">Symbol</label>
-                                                    <select class="form-select" id="trade-symbol" required>
-                                                        <option value="BTC/USDT">BTC/USDT</option>
-                                                        <option value="ETH/USDT">ETH/USDT</option>
-                                                        <option value="BNB/USDT">BNB/USDT</option>
-                                                        <option value="ADA/USDT">ADA/USDT</option>
-                                                        <option value="SOL/USDT">SOL/USDT</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <label for="trade-side" class="form-label">Side</label>
-                                                    <select class="form-select" id="trade-side" required>
-                                                        <option value="buy">Buy</option>
-                                                        <option value="sell">Sell</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <label for="trade-amount" class="form-label">Amount ($)</label>
-                                                    <input type="number" class="form-control" id="trade-amount" min="1" max="50" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label for="trade-strategy" class="form-label">Strategy</label>
-                                                    <select class="form-select" id="trade-strategy" required>
-                                                        <option value="manual">Manual</option>
-                                                        <option value="gpu_rsi_strategy">GPU RSI</option>
-                                                        <option value="gpu_volatility_breakout">GPU Volatility</option>
-                                                        <option value="gpu_moving_average_cross">GPU MA Cross</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <label class="form-label">&nbsp;</label>
-                                                    <button type="submit" class="btn btn-primary w-100">Execute</button>
+                                    
+                                    <div class="col-lg-7">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-history me-2 text-info"></i> Recent Trades
+                                                    </h5>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-filter me-1"></i> Filter
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </form>
-                                        
-                                        <!-- Trade History -->
-                                        <div class="mt-4">
-                                            <h6>Recent Trades</h6>
-                                            <div id="trade-history" class="table-responsive">
-                                                <!-- Trade history table will be populated here -->
+                                            <div class="card-body p-0">
+                                                <div id="trade-history" class="table-responsive">
+                                                    <!-- Trade history will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Market Analysis -->
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-chart-line me-2 text-success"></i> Market Analysis
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="market-analysis-chart" class="chart-container"></div>
+                                                <div class="row mt-3 text-center">
+                                                    <div class="col-3">
+                                                        <div class="card bg-light">
+                                                            <div class="card-body py-2">
+                                                                <h6 class="mb-0">RSI</h6>
+                                                                <h5 class="text-primary mb-0">48.2</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="card bg-light">
+                                                            <div class="card-body py-2">
+                                                                <h6 class="mb-0">MACD</h6>
+                                                                <h5 class="text-danger mb-0">-0.21</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="card bg-light">
+                                                            <div class="card-body py-2">
+                                                                <h6 class="mb-0">Volatility</h6>
+                                                                <h5 class="text-warning mb-0">2.4%</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="card bg-light">
+                                                            <div class="card-body py-2">
+                                                                <h6 class="mb-0">Signal</h6>
+                                                                <h5 class="text-info mb-0">Neutral</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Market Data Tab -->
                             <div class="tab-pane fade" id="market" role="tabpanel">
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h6>Real-time Market Data</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-chart-area me-2 text-primary"></i> Market Overview
+                                                    </h5>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button" class="btn btn-outline-secondary active">All</button>
+                                                        <button type="button" class="btn btn-outline-secondary">Gainers</button>
+                                                        <button type="button" class="btn btn-outline-secondary">Losers</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="market-data" class="row g-3">
+                                                    <!-- Market data cards will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div id="market-data" class="row">
-                                            <!-- Market data cards will be populated here -->
+                                </div>
+                                
+                                <!-- Market Trends -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-wave-square me-2 text-success"></i> Market Trends
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="market-trends-chart" class="chart-container"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Market Correlations -->
+                                <div class="row g-3">
+                                    <div class="col-lg-6">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-project-diagram me-2 text-info"></i> Asset Correlations
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="correlation-heatmap" class="chart-container"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-volume-up me-2 text-warning"></i> Market Sentiment
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="market-sentiment" class="mb-4">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h6 class="mb-0">Bitcoin (BTC)</h6>
+                                                        <span class="badge bg-success-soft text-success">Bullish</span>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 8px;">
+                                                        <div class="progress-bar bg-success" role="progressbar" style="width: 72%"></div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h6 class="mb-0">Ethereum (ETH)</h6>
+                                                        <span class="badge bg-warning-soft text-warning">Neutral</span>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 8px;">
+                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 53%"></div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h6 class="mb-0">Solana (SOL)</h6>
+                                                        <span class="badge bg-success-soft text-success">Strongly Bullish</span>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 8px;">
+                                                        <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h6 class="mb-0">Cardano (ADA)</h6>
+                                                        <span class="badge bg-danger-soft text-danger">Bearish</span>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 8px;">
+                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 32%"></div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">Market Mood</h6>
+                                                        <h5 class="text-success mb-0">Cautiously Optimistic</h5>
+                                                        <small class="text-muted">Based on sentiment analysis of recent trading volume and price action</small>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Logs Tab -->
                             <div class="tab-pane fade" id="logs" role="tabpanel">
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h6>System Logs</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="logs-content" style="height: 400px; overflow-y: auto; background: #f8f9fa; padding: 10px; font-family: monospace;">
-                                            <!-- Logs will be populated here -->
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="card glass-card">
+                                            <div class="card-header">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-file-alt me-2 text-primary"></i> System Logs
+                                                    </h5>
+                                                    <div>
+                                                        <div class="btn-group btn-group-sm me-2">
+                                                            <button type="button" class="btn btn-outline-secondary active">All</button>
+                                                            <button type="button" class="btn btn-outline-secondary">Info</button>
+                                                            <button type="button" class="btn btn-outline-secondary">Warning</button>
+                                                            <button type="button" class="btn btn-outline-secondary">Error</button>
+                                                        </div>
+                                                        <button class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-download me-1"></i> Export
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="logs-content" class="logs-container">
+                                                    <!-- Logs will be populated here -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -343,12 +942,40 @@
         <!-- Loading Modal -->
         <div class="modal fade" id="loading-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-sm modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                <div class="modal-content glass-card">
+                    <div class="modal-body text-center p-4">
+                        <div class="spinner-ring">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
                         </div>
-                        <p class="mt-2 mb-0">Processing...</p>
+                        <p class="mt-3 mb-0">Processing Request...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Benchmark Modal -->
+        <div class="modal fade" id="benchmark-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content glass-card">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-tachometer-alt me-2 text-primary"></i> GPU Benchmark Results
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="benchmark-results-container">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-download me-2"></i> Export Results
+                        </button>
                     </div>
                 </div>
             </div>
@@ -356,9 +983,9 @@
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Chart.js for potential future charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ApexCharts for enhanced charts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
     <!-- Custom JavaScript -->
     <script src="/static/js/app.js"></script>
 </body>

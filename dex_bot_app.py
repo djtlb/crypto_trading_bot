@@ -42,9 +42,18 @@ logger = logging.getLogger("DEXBot")
 app = Flask(__name__, 
             static_folder='static',
             template_folder='templates')
-CORS(app)
 
-# Global variables
+# Configure CORS with proper settings
+cors_allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000").split(",")
+CORS(app, 
+     origins=cors_allowed_origins,
+     supports_credentials=True,
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "X-API-Key"],
+     expose_headers=["Content-Disposition"],
+     max_age=600)  # Cache preflight requests for 10 minutes
+
+print(f"DEX Bot initialized with CORS allowed origins: {cors_allowed_origins}")
 active_wallet = None
 active_strategies = {}
 connections = {}
@@ -352,7 +361,7 @@ def start_trade():
             "error": "Missing required parameters"
         }), 400
     
-    if strategy_type not in ["sniper", "scalping", "swing", "arbitrage"]:
+    if strategy_type not in ["sniper", "scalping", "swing", "arbitrage", "high_frequency_momentum"]:
         return jsonify({
             "success": False, 
             "error": f"Invalid strategy type: {strategy_type}"
@@ -698,6 +707,27 @@ def get_available_strategies():
                     "min_profit_threshold": "Minimum profit percentage to execute (default: 1.0)",
                     "check_interval": "Seconds between opportunity checks (default: 30)",
                     "max_concurrent_arbs": "Maximum concurrent arbitrage operations (default: 1)"
+                }
+            }
+        },
+        "high_frequency_momentum": {
+            "description": "High-risk strategy that attempts to capture rapid price movements in volatile tokens",
+            "parameters": {
+                "token_address": "Main token to monitor (or specify target_tokens for multiple)",
+                "base_token_address": "Base token to use for trading (default: chain's native token)",
+                "amount": "Total amount of base token to use across all trades",
+                "slippage": "Slippage tolerance in percentage (default: 3.0)",
+                "profit_target": "Profit target in percentage (default: 10.0)",
+                "stop_loss": "Stop loss in percentage (default: 5.0)",
+                "custom_params": {
+                    "target_tokens": "List of tokens to monitor for momentum signals",
+                    "scan_interval": "Seconds between price scans (default: 5)",
+                    "momentum_threshold": "Minimum price momentum to trigger entry (default: 3.0%)",
+                    "volume_threshold": "Minimum volume multiplier vs average (default: 2.0)",
+                    "position_size": "Percentage of capital per trade (default: 0.1)",
+                    "max_positions": "Maximum concurrent positions (default: 3)",
+                    "max_hold_time": "Maximum hold time in seconds (default: 600)",
+                    "gas_boost": "Gas price multiplier for fast execution (default: 1.5)"
                 }
             }
         }
@@ -1144,4 +1174,4 @@ if __name__ == "__main__":
     initialize_encryption()
     
     # Run the server
-    app.run(host="0.0.0.0", port=5003, debug=True)
+    app.run(host="0.0.0.0", port=5005, debug=True)

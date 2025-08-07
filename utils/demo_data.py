@@ -176,8 +176,10 @@ class DemoDataService:
         return {
             'gpu_available': True,
             'use_opencl': False,
+            'use_rocm': False,
             'use_numba': True,
-            'use_polars': True
+            'use_polars': True,
+            'acceleration_type': 'AMD-optimized using Numba JIT'
         }
     
     def get_demo_benchmark_results(self) -> Dict:
@@ -185,24 +187,28 @@ class DemoDataService:
         return {
             'gpu_available': True,
             'numba_available': True,
+            'polars_available': True,
             'test_passed': True,
             'performance_improvement': '5-20x speedup with Numba JIT',
             'benchmark_time': datetime.now().isoformat(),
             'details': {
                 'rolling_mean': 'SUCCESS - 8.5x faster',
+                'rolling_std': 'SUCCESS - 10.2x faster',
+                'ema_calculation': 'SUCCESS - 7.8x faster',
                 'rsi_calculation': 'SUCCESS - 12.3x faster', 
                 'atr_calculation': 'SUCCESS - 15.7x faster',
-                'gpu_memory': 'AMD RX 5700 XT detected',
-                'fallback_mode': 'Numba JIT compilation'
+                'gpu_memory': 'AMD GPU with Numba acceleration',
+                'fallback_mode': 'CPU with optimized vector operations'
             }
         }
     
     def get_demo_logs(self) -> List[str]:
         """Get demo system logs"""
         logs = [
-            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - GPU acceleration initialized",
-            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Numba JIT compilation active",
-            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - AMD RX 5700 XT GPU detected",
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - AMD GPU acceleration initialized",
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - OpenCL detection failed: PLATFORM_NOT_FOUND_KHR",
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Numba JIT compilation active for AMD hardware",
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Polars fast DataFrame operations enabled",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Portfolio manager started",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Multi-strategy trader initialized",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] SUCCESS - RSI strategy executed: BTC/USDT buy $5.50",
@@ -211,7 +217,7 @@ class DemoDataService:
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Portfolio status: 3/10 active trades",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Daily P&L: +$2.30",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] WARNING - Rate limit approaching for exchange",
-            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - GPU calculations 12.3x faster than CPU",
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Numba acceleration 12.3x faster than CPU",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] SUCCESS - Stop loss triggered: ADA/USDT sell $3.25",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - Risk manager: position size optimized",
             f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] INFO - WebSocket connection stable"

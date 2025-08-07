@@ -2,7 +2,7 @@
 
 // Configuration
 const config = {
-    apiBaseUrl: localStorage.getItem('apiBaseUrl') || 'http://localhost:5003',
+    apiBaseUrl: localStorage.getItem('apiBaseUrl') || 'http://localhost:5005',
     defaultChainId: localStorage.getItem('defaultChainId') || '1',
     defaultDexId: localStorage.getItem('defaultDexId') || 'uniswap_v2',
     defaultSlippage: localStorage.getItem('defaultSlippage') || '1.0',
