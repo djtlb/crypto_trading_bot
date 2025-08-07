@@ -4,7 +4,7 @@
 
 Your crypto trading bot is now configured with **AMD GPU acceleration** to make **multiple trades using a total budget of $50** much faster and smoother. Here's everything that's been implemented:
 
-### 🏗️ Core Components:
+### 🏗️ Core Components
 
 1. **Portfolio Manager** (`utils/portfolio_manager.py`)
    - Manages your $50 total budget
@@ -33,7 +33,7 @@ Your crypto trading bot is now configured with **AMD GPU acceleration** to make 
    - Configuration checking
    - Dashboard integration
 
-### 🚀 NEW: GPU Acceleration Components:
+### 🚀 NEW: GPU Acceleration Components
 
 6. **GPU Acceleration Engine** (`utils/gpu_acceleration.py`)
    - AMD Radeon RX 5700 XT support
@@ -67,12 +67,14 @@ Performance Boost: 5-20x faster calculations
 ### ⚡ GPU Performance Status
 
 **✅ Working Accelerations:**
+
 - **Numba JIT Compilation**: 5-20x speedup on calculations
 - **Polars DataFrames**: Ultra-fast data processing
 - **Vectorized Operations**: Optimized mathematical computations
 - **AMD GPU Detected**: Radeon RX 5700 XT ready
 
 **🔧 Performance Test Results:**
+
 ```text
 ✅ Rolling Mean Calculation: SUCCESS
 ✅ RSI Calculation: SUCCESS  
@@ -81,7 +83,7 @@ Performance Boost: 5-20x faster calculations
 ⚠️ OpenCL: Needs drivers (optional extra speedup)
 ```
 
-### 🎯 Multi-Strategy Setup:
+### 🎯 Multi-Strategy Setup
 
 | Strategy | Symbols | Execution Interval |
 |----------|---------|-------------------|
@@ -89,28 +91,32 @@ Performance Boost: 5-20x faster calculations
 | RSI Strategy | BTC/USDT, ETH/USDT, ADA/USDT | 1.5 minutes |
 | Moving Average Cross | BTC/USDT, SOL/USDT | 2 minutes |
 
-## 🚀 How to Start Trading:
+## 🚀 How to Start Trading
 
 ### 1. Test Everything First
+
 ```bash
 python test_bot.py
 ```
 
 ### 2. Check Configuration
+
 ```bash
 python run_bot.py --check-config
 ```
 
 ### 3. Start Multi-Strategy Trading
+
 ```bash
 python run_bot.py
 ```
 
 ### 4. Monitor Dashboard
+
 - **Console**: Updates every 30 seconds
 - **Browser**: Open `logs/dashboard.html`
 
-## 📈 Expected Behavior:
+## 📈 Expected Behavior
 
 - **Multiple small trades** instead of one large trade
 - **Diversified across different coins** (BTC, ETH, BNB, ADA, SOL)
@@ -118,7 +124,7 @@ python run_bot.py
 - **Budget protection** - never exceeds $50 total
 - **Risk management** - 3% stop loss, 8% take profit per trade
 
-## 🛡️ Safety Features:
+## 🛡️ Safety Features
 
 - ✅ Budget never exceeds $50
 - ✅ Daily loss limit ($10)
@@ -127,14 +133,16 @@ python run_bot.py
 - ✅ Emergency stop functionality
 - ✅ Real-time monitoring
 
-## 📁 File Summary:
+## 📁 File Summary
 
-### Core Files Updated:
+### Core Files Updated
+
 - `main.py` - Enhanced with multi-strategy support
 - `.env` - Updated for smaller trades and portfolio management
 - `config/config.json` - Complete configuration file
 
-### New Files Created:
+### New Files Created
+
 - `utils/portfolio_manager.py` - Budget and position management
 - `utils/multi_strategy_trader.py` - Multi-strategy execution
 - `utils/dashboard.py` - Real-time monitoring
@@ -142,33 +150,38 @@ python run_bot.py
 - `test_bot.py` - Component testing
 - `TRADING_GUIDE.md` - Detailed usage guide
 
-### Enhanced Files:
+### Enhanced Files
+
 - `utils/risk_manager.py` - Portfolio integration
 - `requirements.txt` - All dependencies listed
 
-## 🎮 Usage Examples:
+## 🎮 Usage Examples
 
-### Run Multiple Strategies:
+### Run Multiple Strategies
+
 ```bash
 python run_bot.py
 ```
 
-### Run Single Strategy (Legacy):
+### Run Single Strategy (Legacy)
+
 ```bash
 python main.py --single
 ```
 
-### Backtest:
+### Backtest
+
 ```bash
 python main.py --backtest
 ```
 
-### Test Components:
+### Test Components
+
 ```bash
 python test_bot.py
 ```
 
-## 📊 What You'll See:
+## 📊 What You'll See
 
 ```
 ==================================================
@@ -187,7 +200,7 @@ Strategy Performance:
 ==================================================
 ```
 
-## ⚠️ Important Notes:
+## ⚠️ Important Notes
 
 1. **Set API Keys**: Update your exchange API credentials in `.env`
 2. **Start with Testnet**: Use sandbox/paper trading first
@@ -210,6 +223,7 @@ Strategy Performance:
 ## 🚀 GPU Acceleration Achievement
 
 **✅ Successfully Added AMD GPU Support:**
+
 - Your **AMD Radeon RX 5700 XT** is detected and working
 - **Numba JIT compilation** provides 5-20x speedup
 - **Polars** accelerates DataFrame operations
@@ -217,6 +231,7 @@ Strategy Performance:
 - **Performance testing** validates acceleration
 
 **💡 Optional Enhancement (for even more speed):**
+
 ```bash
 # Install OpenCL drivers for maximum GPU utilization
 sudo apt install ocl-icd-opencl-dev
@@ -228,6 +243,7 @@ sudo apt install ocl-icd-opencl-dev
 ## 🎉 Final Result
 
 Your crypto trading bot now:
+
 - ✅ Makes **multiple small trades** instead of one large trade
 - ✅ Uses **GPU acceleration** for faster calculations
 - ✅ Runs **3 strategies simultaneously** across 5 crypto pairs

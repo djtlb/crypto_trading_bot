@@ -25,6 +25,39 @@ import websocket
 logger = logging.getLogger("GPUAcceleration")
 
 class GPUAccelerator:
+
+    def fetch_eth_gas_price(self, cache_ttl: int = 30) -> dict:
+        """
+        Fetch current Ethereum gas prices from Etherscan API with caching.
+        Args:
+            cache_ttl: Cache time-to-live in seconds (default: 30)
+        Returns:
+            Dictionary with gas price info or error
+        """
+        import time
+        import requests
+        now = time.time()
+        # Use cached data if recent
+        if self.last_gas_update and (now - self.last_gas_update < cache_ttl) and self.last_gas_data:
+            return {"source": "cache", **self.last_gas_data}
+        url = f"https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey={self.api_key}"
+        try:
+            resp = requests.get(url, timeout=10)
+            if resp.status_code == 200:
+                data = resp.json()
+                if data.get("status") == "1" and "result" in data:
+                    gas = data["result"]
+                    # Save to history and cache
+                    self.last_gas_update = now
+                    self.last_gas_data = gas
+                    self.gas_history_data.append({"timestamp": now, **gas})
+                    return {"source": "etherscan", **gas}
+                else:
+                    return {"error": "Etherscan API error", "data": data}
+            else:
+                return {"error": f"HTTP {resp.status_code}", "text": resp.text}
+        except Exception as e:
+            return {"error": str(e)}
     """GPU acceleration handler for AMD GPUs with multiple backends"""
     
     def __init__(self):
