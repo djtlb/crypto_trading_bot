@@ -20,6 +20,8 @@ from datetime import datetime, timedelta
 import uvicorn
 import secrets
 import time
+from starlette.middleware.gzip import GZipMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 # Import our trading bot components
 from utils.exchange_handler import ExchangeHandler
@@ -60,6 +62,22 @@ app.add_middleware(
     expose_headers=["Content-Disposition"],
     max_age=600  # Cache preflight requests for 10 minutes
 )
+
+# Enable gzip compression for faster transfers
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
+# Add simple cache-control based on path
+class CacheControlMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        if path.startswith("/static/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif path.endswith(".html") or path == "/":
+            response.headers["Cache-Control"] = "no-cache"
+        return response
+
+app.add_middleware(CacheControlMiddleware)
 
 # Add rate limiting for production (adjust parameters as needed)
 # Disable in development by setting ENABLE_RATE_LIMIT=0

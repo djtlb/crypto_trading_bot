@@ -53,10 +53,30 @@ document.addEventListener('DOMContentLoaded', function() {
         alertContainer: document.getElementById('alert-container')
     };
 
-    // Initialize charts
-    initializeCharts();
+    // Initialize charts lazily after login to reduce initial load
+function initChartsWhenReady() {
+    if (window.ApexCharts) {
+        initializeCharts();
+        return;
+    }
+    // Dynamically load ApexCharts only when needed
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js';
+    script.defer = true;
+    document.head.appendChild(script);
 
-    // Event Listeners
+    const start = Date.now();
+    const timerId = setInterval(() => {
+        if (window.ApexCharts || Date.now() - start > 5000) {
+            clearInterval(timerId);
+            if (window.ApexCharts) {
+                initializeCharts();
+            }
+        }
+    }, 50);
+}
+
+// Event Listeners
     setupEventListeners();
 
     // Initialize WebSocket Connection (mock)
@@ -166,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateConnectionStatus(true);
         elements.loginSection.style.display = 'none';
         elements.dashboardSection.style.display = 'block';
+        
+        // Initialize charts once needed
+        initChartsWhenReady();
 
         // Initialize data
         loadMockData();
